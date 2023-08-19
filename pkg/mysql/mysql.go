@@ -20,11 +20,13 @@ type DBPayload struct {
 // return *sqlx.DB and error
 func NewConnection(p DBPayload) (*sqlx.DB, error) {
 	newConfig := mysql.Config{
-		User:   p.Username,
-		Passwd: p.Password,
-		DBName: p.Database,
-		Net:    "tcp",
-		Addr:   p.Host + ":" + p.Port,
+		User:                 p.Username,
+		Passwd:               p.Password,
+		DBName:               p.Database,
+		Net:                  "tcp",
+		Addr:                 p.Host + ":" + p.Port,
+		AllowNativePasswords: true,
+		ParseTime:            true,
 	}
 
 	db, err := sqlx.Connect("mysql", newConfig.FormatDSN())
