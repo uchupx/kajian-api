@@ -6,6 +6,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"github.com/uchupx/kajian-api/pkg/db"
 )
 
 type DBPayload struct {
@@ -18,7 +19,7 @@ type DBPayload struct {
 
 // Create new connection to mysql database
 // return *sqlx.DB and error
-func NewConnection(p DBPayload) (*sqlx.DB, error) {
+func NewConnection(p DBPayload) (*db.DB, error) {
 	newConfig := mysql.Config{
 		User:                 p.Username,
 		Passwd:               p.Password,
@@ -29,14 +30,14 @@ func NewConnection(p DBPayload) (*sqlx.DB, error) {
 		ParseTime:            true,
 	}
 
-	db, err := sqlx.Connect("mysql", newConfig.FormatDSN())
+	conn, err := sqlx.Connect("mysql", newConfig.FormatDSN())
 	if err != nil {
 		return nil, fmt.Errorf("failed connectin database host:%s, err: %+v", fmt.Sprintf("%s:%s", p.Host, p.Port), err)
 	}
 
-	if err := db.Ping(); err != nil {
+	if err := conn.Ping(); err != nil {
 		return nil, fmt.Errorf("failed ping database host:%s, err: %+v", fmt.Sprintf("%s:%s", p.Host, p.Port), err)
 	}
 
-	return db, nil
+	return &db.DB{DB: conn}, nil
 }
