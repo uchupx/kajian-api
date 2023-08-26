@@ -34,9 +34,9 @@ func InitLog(config LogConfig) *logrus.Entry {
 		},
 	}
 
-	// if conf.Env == "debug" {
-	// 	format.PrettyPrint = true
-	// }
+	if config.isDebug {
+		format.PrettyPrint = true
+	}
 
 	logger := logrus.Logger{
 		Level:        logrus.InfoLevel,
@@ -50,4 +50,8 @@ func InitLog(config LogConfig) *logrus.Entry {
 	})
 
 	return Logger
+}
+
+func (l *LogConfig) SetDebug(isDebug bool) {
+	l.isDebug = isDebug
 }
